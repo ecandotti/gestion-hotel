@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\BookingRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=BookingRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Booking
 {
@@ -37,6 +39,12 @@ class Booking
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Room::class, inversedBy="bookings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $room;
 
     public function getId(): ?int
     {
@@ -89,5 +97,30 @@ class Booking
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getRoom(): ?Room
+    {
+        return $this->room;
+    }
+
+    public function setRoom(?Room $room): self
+    {
+        $this->room = $room;
+
+        return $this;
+    }
+
+    /*
+    * @ORM\PrePersist
+    *
+    * @return void
+    */
+
+    public function prePersist()
+    {
+        if (empty($this->createAt)) {
+            $this->createAt = new DateTime();
+        }
     }
 }

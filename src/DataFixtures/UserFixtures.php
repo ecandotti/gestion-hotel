@@ -27,6 +27,7 @@ class UserFixtures extends Fixture
         ;
         
         $manager->persist($user);
+        $this->addReference('user_user', $user);
 
         $admin = new User();
         $admin
@@ -38,6 +39,7 @@ class UserFixtures extends Fixture
         ;
         
         $manager->persist($admin);
+        $this->addReference('user_admin', $admin);
 
         $manager->flush();
     }
